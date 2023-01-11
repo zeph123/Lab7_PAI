@@ -17,8 +17,9 @@ public class StudentService {
         return (List<Student>) studentRepository.findByOrderByIdAsc();
     }
 
-    public void addStudent(Student student) {
+    public boolean addStudent(Student student) {
         studentRepository.save(student);
+        return true;
     }
 
     public boolean isInteger(String id) {
@@ -36,23 +37,21 @@ public class StudentService {
         return false;
     }
 
-    public void deleteStudent(String id) {
-        if (isInteger(id)) {
-            Integer idStudent = Integer.parseInt(id);
-            if (studentRepository.existsById(idStudent)) {
-                studentRepository.deleteById(idStudent);
-            }
+    public boolean deleteStudent(Integer id) {
+        if (studentRepository.existsById(id)) {
+            studentRepository.deleteById(id);
+            return true;
         }
+        return false;
     }
 
-    public void updateStudent(Student student, String id) {
-        if (isInteger(id)) {
-            Integer idStudent = Integer.parseInt(id);
-            if (studentRepository.existsById(idStudent)) {
-                student.setId(idStudent);
-                studentRepository.save(student);
-            }
+    public boolean updateStudent(Student student, Integer id) {
+        if (studentRepository.existsById(id)) {
+            student.setId(id);
+            studentRepository.save(student);
+            return true;
         }
+        return false;
     }
 
     public Student getStudentById(String id) {
@@ -63,6 +62,25 @@ public class StudentService {
             }
         }
         return null;
+    }
+
+    public boolean isEmpty(String value) {
+        return !value.isEmpty();
+    }
+
+    public boolean isDouble(String value) {
+        try {
+            Double val = Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            // parsowanie się nie powiodło
+            return false;
+        }
+        // parsowanie się powiodło
+        return true;
+    }
+
+    public boolean checkAverageRange(Double average) {
+        return average >= 2.0 && average <= 5.0;
     }
 
 }
